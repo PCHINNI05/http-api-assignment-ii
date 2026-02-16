@@ -1,0 +1,27 @@
+{
+  "name": "http_api_assignment_ii",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/PCHINNI05/http-api-assignment-ii#readme",
+  "bugs": {
+    "url": "https://github.com/PCHINNI05/http-api-assignment-ii/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PCHINNI05/http-api-assignment-ii.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Praneel Chinni",
+  "type": "commonjs",
+  "main": "eslint.config.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0"
+  }
+}
