@@ -5,7 +5,126 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const parseResponse = async (response) => {
+      const content = document.querySelector('#content');
 
+      const statusCode = response.status;
+      const statusText = response.statusText;
+
+      let title = 'Success';
+
+      if (statusCode === 201) {
+        title = 'Created';
+      } else if (statusCode === 204) {
+        title = 'Updated (No Content)';
+      } else if (statusCode === 400) {
+        title = 'Bad Request';
+      } else if (statusCode === 404) {
+        title = 'Not Found';
+      }
+
+      // Always show the heading
+      content.innerHTML = `<h2>${title}</h2>`;
+
+      if (response.type === 'opaque' || response.status === 204) {
+        return;
+      }
+      // If request was HEAD, do not parse JSON
+    };
+
+    const handleResponse = async (response, isHead) => {
+      const content = document.querySelector('#content');
+
+      const statusCode = response.status;
+      const statusText = response.statusText;
+
+      let title = 'Success';
+
+      if (statusCode === 201) {
+        title = 'Created';
+      } else if (statusCode === 204) {
+        title = 'Updated (No Content)';
+      } else if (statusCode === 400) {
+        title = 'Bad Request';
+      } else if (statusCode === 404) {
+        title = 'Not Found';
+      }
+
+      content.innerHTML = `<h2>${title}</h2>`;
+
+      if (isHead) {
+        return;
+      }
+
+      // 204 has no body
+      if (statusCode === 204) {
+        return;
+      }
+
+      const obj = await response.json();
+      console.log(obj);
+
+      // If users, show them in the page
+      if (obj.users) {
+        content.innerHTML += `<p>${JSON.stringify(obj.users)}</p>`;
+      }
+
+      // If message, show it
+      if (obj.message) {
+        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+      }
+    };
+
+    const sendPost = async (name, age) => {
+      const formBody = `name=${encodeURIComponent(name)}&age=${encodeURIComponent(age)}`;
+
+      const response = await fetch('/addUser', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formBody,
+      });
+
+      await handleResponse(response, false);
+    };
+
+    const sendFetch = async (urlField, method) => {
+      const isHead = method === 'head';
+
+      const response = await fetch(urlField, {
+        method,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      await handleResponse(response, isHead);
+    };
+
+    const init = () => {
+      const nameForm = document.querySelector('#nameForm');
+      const userForm = document.querySelector('#userForm');
+
+      const nameField = document.querySelector('#nameField');
+      const ageField = document.querySelector('#ageField');
+
+      const urlField = document.querySelector('#urlField');
+      const methodSelect = document.querySelector('#methodSelect');
+
+      nameForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendPost(nameField.value, ageField.value);
+      });
+
+      userForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendFetch(urlField.value, methodSelect.value);
+      });
+    };
+
+    window.onload = init;
   </script>
 </head>
 <body>
